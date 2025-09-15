@@ -1,0 +1,79 @@
+name: influxdb3
+
+networks:
+  app-net:
+    driver: bridge
+
+services:
+  influxdb3-core:
+    container_name: influxdb3-core
+    image: influxdb:3-core
+    command:
+      - influxdb3
+      - serve
+      - --node-id=node0
+      - --object-store=file
+      - --data-dir=/var/lib/influxdb3/data
+      - --plugin-dir=/var/lib/influxdb3/plugins
+    ports:
+      - "8181:8181"
+    volumes:
+      - ./.data:/var/lib/influxdb3/data
+      - ./.plugins:/var/lib/influxdb3/plugins
+    restart: unless-stopped
+    networks:
+      - app-net
+
+  explorer:
+    container_name: influxdb3-explorer
+    image: influxdata/influxdb3-ui:1.2.0
+    command: ["--mode=admin"]
+    ports:
+      - "8888:80"
+    volumes:
+      - ./.db:/db:rw
+      - ./.config:/app-root/config:ro
+    restart: unless-stopped
+    networks:
+      - app-net
+
+  grafana:
+    container_name: grafana
+    image: grafana/grafana:latest
+    environment:
+      GF_SECURITY_ADMIN_USER: "admin"
+      GF_SECURITY_ADMIN_PASSWORD: "admin" 
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./.grafana-provisioning:/etc/grafana/provisioning
+    restart: unless-stopped
+    networks:
+      - app-net
+
+  ollama:
+    container_name: ollama
+    image: ollama/ollama:latest
+    volumes:
+      - ./.ollama:/root/.ollama
+    ports:
+      - "11434:11434"
+    restart: unless-stopped
+    networks:
+      - app-net
+
+  openwebui:
+    container_name: openwebui
+    image: ghcr.io/open-webui/open-webui:main
+    depends_on:
+      - ollama
+    environment:
+      - OLLAMA_HOST=http://ollama:11434
+    ports:
+      - "3030:8080"
+    volumes:
+      - ./.openwebui:/app/backend/data
+    restart: unless-stopped
+    networks:
+      - app-net
+
