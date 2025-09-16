@@ -8,6 +8,7 @@ services:
   influxdb3-core:
     container_name: influxdb3-core
     image: influxdb:3-core
+    user: "${UID}:${GID}"
     command:
       - influxdb3
       - serve
@@ -20,7 +21,6 @@ services:
     volumes:
       - ./.data:/var/lib/influxdb3/data
       - ./.plugins:/var/lib/influxdb3/plugins
-    restart: unless-stopped
     networks:
       - app-net
 
@@ -41,8 +41,8 @@ services:
     container_name: grafana
     image: grafana/grafana:latest
     environment:
-      GF_SECURITY_ADMIN_USER: "admin"
-      GF_SECURITY_ADMIN_PASSWORD: "admin" 
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
     ports:
       - "3000:3000"
     volumes:

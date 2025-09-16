@@ -1,0 +1,3 @@
+mkdir -p .data .plugins .db .config .grafana-provisioning .ollama .openwebui
+chown -R peter996:peter996 .data .plugins .db .config .grafana-provisioning .ollama .openwebui
+
