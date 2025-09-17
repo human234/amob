@@ -1,2 +1,7 @@
 enviroment/.*
 !enviroment/.env
+adc/modulator/*
+!adc/modulator/delta_sigma_modulator.PcbDoc
+!adc/modulator/delta_sigma_modulator.SchDoc
+!adc/modulator/pdf
+!adc/modulator/components
