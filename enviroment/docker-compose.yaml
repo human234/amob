@@ -19,8 +19,8 @@ services:
     ports:
       - "8181:8181"
     volumes:
-      - ./.data:/var/lib/influxdb3/data
-      - ./.plugins:/var/lib/influxdb3/plugins
+      - ./.influxdb3-data:/var/lib/influxdb3/data
+      - ./.influxdb3-plugins:/var/lib/influxdb3/plugins
     networks:
       - app-net
 
@@ -31,8 +31,8 @@ services:
     ports:
       - "8888:80"
     volumes:
-      - ./.db:/db:rw
-      - ./.config:/app-root/config:ro
+      - ./.explorer-db:/db:rw
+      - ./.explorer-config:/app-root/config:ro
     restart: unless-stopped
     networks:
       - app-net
